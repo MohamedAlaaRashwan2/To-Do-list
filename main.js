@@ -32,6 +32,8 @@ submitTask.addEventListener("click", (e) => {
                 id: Date.now(),
                 title: inputTask.value,
                 completed: false,
+                createdAt: Date.now(),
+                notified: false
             };
             tasks.push(task);
         }
@@ -42,6 +44,28 @@ submitTask.addEventListener("click", (e) => {
         alert("Please enter a task");
     }
 });
+
+
+
+setInterval(() => {
+    const tasks = JSON.parse(window.localStorage.getItem("tasks")) || [];
+    const now = Date.now();
+
+    let update = false;
+    tasks.map((task) => {
+        const diff = now - task.createdAt;
+        if (diff >= 24 * 60 * 60 * 1000 && !task.notified) {
+            alert(`Task "${task.title}" is due!`);
+            update = true;
+            return { ...task, notified: true };
+        }
+        return task;
+    });
+
+    if (update) {
+        localStorage.setItem("tasks", JSON.stringify(tasks));
+    }
+}, 1000);
 
 function renderTasks() {
     tasksContainer.innerHTML = "";
