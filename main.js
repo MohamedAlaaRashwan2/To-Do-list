@@ -1,8 +1,9 @@
-
 const inputTask = document.getElementById("task");
 const submitTask = document.getElementById("add");
 const tasksContainer = document.getElementById("tasks");
-
+if (Notification.permission !== "granted") {
+    Notification.requestPermission();
+}
 let tasks = [];
 
 
@@ -30,9 +31,8 @@ submitTask.addEventListener("click", (e) => {
             // إضافة مهمة جديدة
             const task = {
                 id: Date.now(),
-                title: inputTask.value,
+                title: inputTask.value || "",
                 completed: false,
-                createdAt: Date.now(),
                 notified: false
             };
             tasks.push(task);
@@ -48,14 +48,19 @@ submitTask.addEventListener("click", (e) => {
 
 
 setInterval(() => {
-    const tasks = JSON.parse(window.localStorage.getItem("tasks")) || [];
     const now = Date.now();
-
     let update = false;
-    tasks.map((task) => {
-        const diff = now - task.createdAt;
+    tasks = tasks.map((task) => {
+        const diff = now - task.id;
         if (diff >= 24 * 60 * 60 * 1000 && !task.notified) {
-            alert(`Task "${task.title}" is due!`);
+            if (Notification.permission === "granted") {
+                new Notification("Task Reminder", {
+                    body: `Task "${task.title}" is due!`,
+                    icon: "Untitled-1.png"
+                });
+            } else {
+                Notification.requestPermission();
+            }
             update = true;
             return { ...task, notified: true };
         }
@@ -118,5 +123,3 @@ function editTask(id) {
         inputTask.focus();
     }
 }
-
-
