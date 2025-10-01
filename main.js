@@ -17,7 +17,7 @@ submitTask.addEventListener("click", (e) => {
     e.preventDefault();
     if (inputTask.value) {
         if (editId !== 0) {
-            // تعديل المهمة
+
             tasks = tasks.map((task) => {
                 if (task.id === editId) {
                     return { ...task, 
@@ -28,13 +28,13 @@ submitTask.addEventListener("click", (e) => {
             });
             editId = 0;
         } else {
-            // إضافة مهمة جديدة
+
             const task = {
                 id: Date.now(),
                 title: inputTask.value || "",
                 completed: false,
                 notified: false,
-                createdAt: Date.now() // أضف هذا السطر
+                createdAt: Date.now()
             };
             tasks.push(task);
         }
@@ -52,7 +52,7 @@ setInterval(() => {
     const now = Date.now();
     let update = false;
     tasks = tasks.map((task) => {
-        const diff = now - (task.createdAt || task.id); // استخدم createdAt إذا موجود
+        const diff = now - (task.createdAt || task.id); 
         if (diff >= 24 * 60 * 60 * 1000 && !task.notified) {
             if (Notification.permission === "granted") {
                 new Notification("Task Reminder", {
