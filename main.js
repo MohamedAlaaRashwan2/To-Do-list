@@ -33,7 +33,8 @@ submitTask.addEventListener("click", (e) => {
                 id: Date.now(),
                 title: inputTask.value || "",
                 completed: false,
-                notified: false
+                notified: false,
+                createdAt: Date.now() // أضف هذا السطر
             };
             tasks.push(task);
         }
@@ -51,7 +52,7 @@ setInterval(() => {
     const now = Date.now();
     let update = false;
     tasks = tasks.map((task) => {
-        const diff = now - task.id;
+        const diff = now - (task.createdAt || task.id); // استخدم createdAt إذا موجود
         if (diff >= 24 * 60 * 60 * 1000 && !task.notified) {
             if (Notification.permission === "granted") {
                 new Notification("Task Reminder", {
@@ -79,7 +80,8 @@ function renderTasks() {
         if (task.title !== "") {
             li.className = task.title;
             li.innerHTML = `
-        <span onclick="chackTask(this, ${task.id})" class="${task.completed ? 'chack' : ''}">${task.title}</span>
+        <span class="task-title" onclick="chackTask(this, ${task.id})" class="${task.completed ? 'chack' : ''}">${task.title}</span>
+        <span class="${task.notified ? 'due' : ''}">${task.notified ? 'due' : ''}</span>
         <div>
         <button class="edit" onclick="editTask(${task.id})"><i class="fa-solid fa-pen"></i></button>
         <button class="delete" onclick="deleteTask(${task.id})"><i class="fa-solid fa-trash"></i></button>

@@ -70,6 +70,7 @@ li{
     justify-content: space-between;
     align-items: center;
     transition: all 0.3s ease;
+    position: relative;
 }
 
 li div{
@@ -86,7 +87,13 @@ text-decoration: line-through;
 color: #777;
 }
 
-li span{
+li span.due{
+    position: absolute;
+    right: 138px;
+    font-size: 12px;
+    color: #ff5e5e;
+}
+li span.task-title{
     cursor: pointer;
     margin-left: 25px;
     overflow:hidden;
